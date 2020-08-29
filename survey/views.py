@@ -11,16 +11,15 @@ from survey.permissions import IsUserOrReadOnly
 class FormList(generics.ListCreateAPIView):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(User=self.request.user)
-        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        serializer.save(user=self.request.user)
 
 
 class FormDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsUserOrReadOnly]
 
