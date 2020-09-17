@@ -1,19 +1,34 @@
-from .models import Form
+from .models import Form,Question,Choice
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
-    forms = serializers.PrimaryKeyRelatedField(many=True, queryset=Form.objects.all())
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    # form = serializers.HyperlinkedRelatedField(many=True, view_name='form-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'forms']
+        fields = ['url', 'id', 'username']
 
-
-class FormSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+class FormSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Form
-        fields = '__all__'
+        fields = ['url', 'id', 'pub_date', 'title', 'user']
+    
+class QuestionSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Question
+        fields = ['url', 'id', 'form', 'question_text',]
+
+class ChoiceSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Choice
+        fields = ['url', 'id', 'question', 'choice_text', 'votes','user']
+    
+    

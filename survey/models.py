@@ -10,11 +10,18 @@ class Form(models.Model):
     pub_date = models.DateTimeField('date published')
     title = models.CharField(max_length=100, blank=True, default='')
 
+    def __str__(self):
+        if self.title:
+            return self.title
+
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     form = models.ForeignKey(Form, on_delete=models.CASCADE)
 
+    def __str__(self):
+        if self.question_text:
+            return self.question_text
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

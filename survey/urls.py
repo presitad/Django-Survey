@@ -1,14 +1,17 @@
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from survey import views
 
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'form', views.FormViewSet)
+router.register(r'question', views.QuestionViewSet)
+router.register(r'choice', views.ChoiceViewSet)
+router.register(r'users', views.UserViewSet)
+
+# The API URLs are now determined automatically by the router.
 urlpatterns = [
-    path('form/', views.FormList.as_view()),
-    path('form/<int:pk>/', views.FormDetail.as_view()),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetail.as_view()),
+    path('', include(router.urls)),
 ]
-urlpatterns = format_suffix_patterns(urlpatterns)
-
 
